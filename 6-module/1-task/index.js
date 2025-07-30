@@ -12,7 +12,55 @@
  *      }
  *
  */
+
+function createElement(html) {
+  const tmp = document.createElement('div');
+    
+  tmp.innerHTML = html;
+    
+  return tmp.firstElementChild;
+}
+
 export default class UserTable {
+
+  elem = null;
+  #rows = []
+
   constructor(rows) {
+    this.#rows = rows ?? this.#rows;
+
+    this.#render();
+  }
+
+  #html() {
+    return `
+    <table>
+      <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Возраст</th>
+            <th>Зарплата</th>
+            <th>Город</th>
+            <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${this.#rows
+          .map(row => `<tr>
+                          <td>${row.name}</td>
+                          <td>${row.age}</td>
+                          <td>${row.salary}</td>
+                          <td>${row.city}</td>
+                          <td><button>X</button></td>
+                        </tr>
+          `)
+          .join('\n')}
+      </tbody>
+    </table>
+    `;
+  }
+
+  #render() {
+    this.elem = createElement(this.#html());
   }
 }
