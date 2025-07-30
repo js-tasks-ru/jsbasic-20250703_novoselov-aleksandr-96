@@ -51,7 +51,7 @@ export default class UserTable {
                           <td>${row.age}</td>
                           <td>${row.salary}</td>
                           <td>${row.city}</td>
-                          <td><button>X</button></td>
+                          <td><button class="delete-btn">X</button></td>
                         </tr>
           `)
           .join('\n')}
@@ -62,5 +62,15 @@ export default class UserTable {
 
   #render() {
     this.elem = createElement(this.#html());
+
+    this.elem.addEventListener('click', event => {
+      if (event.target.classList.contains('delete-btn')) {
+        const row = event.target.closest('tr');
+
+        if (row) {
+          row.remove();
+        }
+      }
+    });
   }
 }
