@@ -51,7 +51,6 @@ export default class RibbonMenu {
       const item = event.target.closest('.ribbon__item');
 
       if (item) {
-        console.log('item', item);
         event.preventDefault();
         document.querySelector('.ribbon__item_active').classList.remove('ribbon__item_active');
         item.classList.add('ribbon__item_active');
