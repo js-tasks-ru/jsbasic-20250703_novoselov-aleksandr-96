@@ -48,20 +48,17 @@ export default class RibbonMenu {
     });
     
     ribbonInner.addEventListener('click', event => {
-      const item = event.target.closest('.ribbon__item');
+      const item = event.target;
+      event.preventDefault();
+      document.querySelector('.ribbon__item_active').classList.remove('ribbon__item_active');
+      item.classList.add('ribbon__item_active');
 
-      if (item) {
-        event.preventDefault();
-        document.querySelector('.ribbon__item_active').classList.remove('ribbon__item_active');
-        item.classList.add('ribbon__item_active');
+      const customEvent = new CustomEvent('ribbon-select', {
+        detail: item.dataset.id,
+        bubbles: true,
+      });
 
-        const customEvent = new CustomEvent('ribbon-select', {
-          detail: item.dataset.id,
-          bubbles: true,
-        });
-
-        this.elem.dispatchEvent(customEvent);
-      }
+      this.elem.dispatchEvent(customEvent);
     });
 
     ribbonInner.addEventListener('scroll', () => {
