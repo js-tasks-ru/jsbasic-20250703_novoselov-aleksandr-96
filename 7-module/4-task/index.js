@@ -44,7 +44,7 @@ export default class StepSlider {
     this.allSliderSpan = Array.from(this.elem.querySelectorAll('span')).filter(elem => !elem.classList.contains('slider__value'));
     this.allSliderSpan[this.#value].classList.toggle('slider__step-active');
 
-    this.elem.addEventListener('click', event => {
+    this.elem.addEventListener('dblclick', () => {
       this.#thumb = this.elem.querySelector('.slider__thumb');
       this.#progress = this.elem.querySelector('.slider__progress');
 
@@ -57,21 +57,13 @@ export default class StepSlider {
         document.addEventListener('pointerup', this.#onPointerUp);
 
       });
-
-      const thumb = event.target.closest('.slider__thumb');
-      if (thumb) {
-        const pointerDownEvent = new PointerEvent('pointerdown', {
-          bubbles: true,
-          cancelable: true,
-          clientX: event.clientX,
-          clientY: event.clientY,
-          pointerId: 1,
-          pointerType: 'mouse',
-          button: 0 // 0 = левая кнопка мыши
-        });
-        thumb.dispatchEvent(pointerDownEvent);
-      }
     }, {once: true});
+
+    document.addEventListener('DOMContentLoaded', () => {
+      this.elem.dispatchEvent(new Event('dblclick'));
+    });
+
+
 
     
     this.elem.addEventListener('click', event => {
