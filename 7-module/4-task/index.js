@@ -44,13 +44,11 @@ export default class StepSlider {
     this.allSliderSpan = Array.from(this.elem.querySelectorAll('span')).filter(elem => !elem.classList.contains('slider__value'));
     this.allSliderSpan[this.#value].classList.toggle('slider__step-active');
 
-    this.elem.addEventListener('click', () => {
+    this.elem.addEventListener('click', event => {
       this.#thumb = this.elem.querySelector('.slider__thumb');
       this.#progress = this.elem.querySelector('.slider__progress');
 
-      this.#thumb.addEventListener('ondragstart', () => {
-        return false;
-      });
+      this.#thumb.ondragstart = () => false;
 
       this.#thumb.addEventListener('pointerdown', event => {
         event.preventDefault(); // предотвратить запуск выделения (действие браузера)
@@ -59,6 +57,11 @@ export default class StepSlider {
         document.addEventListener('pointerup', this.#onPointerUp);
 
       });
+
+      const thumb = event.target.closest('.slider__thumb');
+      if (thumb) {
+        thumb.dispatchEvent(new Event('pointerdown'));
+      }
     }, {once: true});
 
     
