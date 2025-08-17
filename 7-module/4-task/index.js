@@ -97,7 +97,6 @@ export default class StepSlider {
     event.preventDefault();
     let shiftX = event.clientX - this.#thumb.getBoundingClientRect().left;
     // shiftY здесь не нужен, слайдер двигается только по горизонтали
-    console.log('this.elem', this.elem);
     const newLeft = event.clientX - shiftX - this.elem.getBoundingClientRect().left;
     let leftRelative = newLeft / this.elem.offsetWidth;
 
