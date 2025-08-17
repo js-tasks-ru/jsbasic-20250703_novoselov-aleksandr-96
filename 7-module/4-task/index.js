@@ -2,6 +2,7 @@ import createElement from '../../assets/lib/create-element.js';
 
 export default class StepSlider {
   #steps = 0
+  #segments
   #value = 0
   elem = null
   #oldActiveIndex = 0
@@ -13,6 +14,7 @@ export default class StepSlider {
     this.#steps = steps;
     this.#value = value;
     this.#oldActiveIndex = value;
+    this.#segments = this.#steps - 1;
 
     this.#render();
   }
@@ -61,24 +63,18 @@ export default class StepSlider {
     this.elem.addEventListener('click', event => {
       let left = Math.abs(event.clientX - this.elem.getBoundingClientRect().left);
       let leftRelative = left / this.elem.offsetWidth;
-      let segments = this.#steps - 1;
-      let approximateValue = leftRelative * segments;
-      let value = Math.round(approximateValue);
-      let thumb = this.elem.querySelector('.slider__thumb');
-      let progress = this.elem.querySelector('.slider__progress');
-
-      this.#value = value;
+      let approximateValue = leftRelative * this.#segments;
       
-      this.elem.querySelector('.slider__value').innerHTML = this.#value;
+      this.#valueChangeHandler(approximateValue);
       
       this.allSliderSpan[this.#oldActiveIndex].classList.toggle('slider__step-active');
       this.allSliderSpan[this.#value].classList.toggle('slider__step-active');
       this.#oldActiveIndex = this.#value;
   
-      let valuePercents = this.#value / segments * 100;
+      let valuePercents = this.#value / this.#segments * 100;
 
-      thumb.style.left = `${valuePercents}%`;
-      progress.style.width = `${valuePercents}%`;
+      this.#thumb.style.left = `${valuePercents}%`;
+      this.#progress.style.width = `${valuePercents}%`;
 
       this.#dispatchSliderChangeEvent();
     });
@@ -91,6 +87,12 @@ export default class StepSlider {
     });
 
     this.elem.dispatchEvent(sliderChangeEvent);
+  }
+
+  #valueChangeHandler = approximateValue => {
+    let value = Math.round(approximateValue);
+    this.#value = value;
+    this.elem.querySelector('.slider__value').innerHTML = this.#value;
   }
 
   #onPointerMove = event => {
@@ -112,12 +114,8 @@ export default class StepSlider {
     this.#thumb.style.left = `${leftPercents}%`;
     this.#progress.style.width = `${leftPercents}%`;
 
-    let segments = this.#steps - 1;
-    let approximateValue = leftRelative * segments;
-    let value = Math.round(approximateValue);
-
-    this.#value = value;
-    this.elem.querySelector('.slider__value').innerHTML = this.#value;
+    let approximateValue = leftRelative * this.#segments;
+    this.#valueChangeHandler(approximateValue);
   }
 
   #onPointerUp = () => {
