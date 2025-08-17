@@ -67,17 +67,25 @@ export default class StepSlider {
       
       this.#valueChangeHandler(approximateValue);
       
-      this.allSliderSpan[this.#oldActiveIndex].classList.toggle('slider__step-active');
-      this.allSliderSpan[this.#value].classList.toggle('slider__step-active');
-      this.#oldActiveIndex = this.#value;
-  
-      let valuePercents = this.#value / this.#segments * 100;
+      this.#stepActiveHandler();
 
-      this.#thumb.style.left = `${valuePercents}%`;
-      this.#progress.style.width = `${valuePercents}%`;
+      this.#thumbProgressHandler();
 
       this.#dispatchSliderChangeEvent();
     });
+  }
+
+  #thumbProgressHandler = () => {
+    let valuePercents = this.#value / this.#segments * 100;
+
+    this.#thumb.style.left = `${valuePercents}%`;
+    this.#progress.style.width = `${valuePercents}%`;
+  }
+
+  #stepActiveHandler = () => {
+    this.allSliderSpan[this.#oldActiveIndex].classList.toggle('slider__step-active');
+    this.allSliderSpan[this.#value].classList.toggle('slider__step-active');
+    this.#oldActiveIndex = this.#value;
   }
 
   #dispatchSliderChangeEvent = () => {
@@ -123,6 +131,8 @@ export default class StepSlider {
     document.removeEventListener('pointerup', this.#onPointerUp);
 
     this.elem.classList.remove('slider_dragging');
+    this.#stepActiveHandler();
+    this.#thumbProgressHandler();
     this.#dispatchSliderChangeEvent();
   }
 }
