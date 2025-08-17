@@ -6,6 +6,8 @@ export default class StepSlider {
   elem = null
   #oldActiveIndex = 0
   #allSliderSpan = null
+  #thumb = null
+  #progress = null
 
   constructor({ steps, value = 0 }) {
     this.#steps = steps;
@@ -42,6 +44,23 @@ export default class StepSlider {
     this.allSliderSpan = Array.from(this.elem.querySelectorAll('span')).filter(elem => !elem.classList.contains('slider__value'));
     this.allSliderSpan[this.#value].classList.toggle('slider__step-active');
 
+    this.elem.addEventListener('click', () => {
+      this.#thumb = this.elem.querySelector('.slider__thumb');
+      this.#progress = this.elem.querySelector('.slider__progress');
+
+      this.#thumb.addEventListener('ondragstart', () => {
+        return false;
+      });
+
+      this.#thumb.addEventListener('pointerdown', event => {
+        event.preventDefault(); // предотвратить запуск выделения (действие браузера)
+
+        document.addEventListener('pointermove', this.#onPointerMove);
+        document.addEventListener('pointerup', this.#onPointerUp);
+
+      });
+    }, {once: true});
+
     
     this.elem.addEventListener('click', event => {
       let left = Math.abs(event.clientX - this.elem.getBoundingClientRect().left);
@@ -72,5 +91,46 @@ export default class StepSlider {
 
       this.elem.dispatchEvent(sliderChangeEvent);
     });
+  }
+
+  #onPointerMove = event => {
+    event.preventDefault();
+    let shiftX = event.clientX - this.#thumb.getBoundingClientRect().left;
+    // shiftY здесь не нужен, слайдер двигается только по горизонтали
+    console.log('this.elem', this.elem);
+    const newLeft = event.clientX - shiftX - this.elem.getBoundingClientRect().left;
+    let leftRelative = newLeft / this.elem.offsetWidth;
+
+    // курсор вышел из слайдера => оставить бегунок в его границах.
+    if (leftRelative < 0) {
+      leftRelative = 0;
+    }
+
+    if (leftRelative > 1) {
+      leftRelative = 1;
+    }
+
+    let leftPercents = leftRelative * 100;
+  
+    this.#thumb.style.left = `${leftPercents}%`;
+    this.#progress.style.width = `${leftPercents}%`;
+
+    let segments = this.#steps - 1;
+    let approximateValue = leftRelative * segments;
+    let value = Math.round(approximateValue);
+
+    this.#value = value;
+  }
+
+  #onPointerUp = () => {
+    document.removeEventListener('pointermove', this.#onPointerMove);
+    document.removeEventListener('pointerup', this.#onPointerUp);
+
+    const sliderChangeEvent = new CustomEvent('slider-change', { // имя события должно быть именно 'slider-change'
+      detail: this.#value, // значение 0, 1, 2, 3, 4
+      bubbles: true // событие всплывает - это понадобится в дальнейшем
+    });
+
+    this.elem.dispatchEvent(sliderChangeEvent);
   }
 }
