@@ -98,9 +98,7 @@ export default class StepSlider {
 
   #onPointerMove = event => {
     event.preventDefault();
-    let shiftX = event.clientX - this.#thumb.getBoundingClientRect().left;
-    // shiftY здесь не нужен, слайдер двигается только по горизонтали
-    const newLeft = event.clientX - shiftX - this.elem.getBoundingClientRect().left;
+    const newLeft = event.clientX - this.elem.getBoundingClientRect().left;;
     let leftRelative = newLeft / this.elem.offsetWidth;
 
     // курсор вышел из слайдера => оставить бегунок в его границах.
