@@ -80,13 +80,17 @@ export default class StepSlider {
       thumb.style.left = `${valuePercents}%`;
       progress.style.width = `${valuePercents}%`;
 
-      const sliderChangeEvent = new CustomEvent('slider-change', { // имя события должно быть именно 'slider-change'
-        detail: this.#value, // значение 0, 1, 2, 3, 4
-        bubbles: true // событие всплывает - это понадобится в дальнейшем
-      });
-
-      this.elem.dispatchEvent(sliderChangeEvent);
+      this.#dispatchSliderChangeEvent();
     });
+  }
+
+  #dispatchSliderChangeEvent = () => {
+    const sliderChangeEvent = new CustomEvent('slider-change', { // имя события должно быть именно 'slider-change'
+      detail: this.#value, // значение 0, 1, 2, 3, 4
+      bubbles: true // событие всплывает - это понадобится в дальнейшем
+    });
+
+    this.elem.dispatchEvent(sliderChangeEvent);
   }
 
   #onPointerMove = event => {
@@ -121,12 +125,6 @@ export default class StepSlider {
     document.removeEventListener('pointerup', this.#onPointerUp);
 
     this.elem.classList.remove('slider_dragging');
-
-    const sliderChangeEvent = new CustomEvent('slider-change', { // имя события должно быть именно 'slider-change'
-      detail: this.#value, // значение 0, 1, 2, 3, 4
-      bubbles: true // событие всплывает - это понадобится в дальнейшем
-    });
-
-    this.elem.dispatchEvent(sliderChangeEvent);
+    this.#dispatchSliderChangeEvent();
   }
 }
