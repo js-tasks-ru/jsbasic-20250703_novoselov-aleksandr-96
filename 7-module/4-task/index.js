@@ -44,27 +44,19 @@ export default class StepSlider {
     this.allSliderSpan = Array.from(this.elem.querySelectorAll('span')).filter(elem => !elem.classList.contains('slider__value'));
     this.allSliderSpan[this.#value].classList.toggle('slider__step-active');
 
-    this.elem.addEventListener('dblclick', () => {
-      this.#thumb = this.elem.querySelector('.slider__thumb');
-      this.#progress = this.elem.querySelector('.slider__progress');
+    this.#thumb = this.elem.querySelector('.slider__thumb');
+    this.#progress = this.elem.querySelector('.slider__progress');
 
-      this.#thumb.ondragstart = () => false;
+    this.#thumb.ondragstart = () => false;
 
-      this.#thumb.addEventListener('pointerdown', event => {
-        event.preventDefault(); // предотвратить запуск выделения (действие браузера)
+    this.#thumb.addEventListener('pointerdown', event => {
+      event.preventDefault(); // предотвратить запуск выделения (действие браузера)
+      this.elem.classList.add('slider_dragging');
 
-        document.addEventListener('pointermove', this.#onPointerMove);
-        document.addEventListener('pointerup', this.#onPointerUp);
+      document.addEventListener('pointermove', this.#onPointerMove);
+      document.addEventListener('pointerup', this.#onPointerUp);
 
-      });
-    }, {once: true});
-
-    document.addEventListener('DOMContentLoaded', () => {
-      this.elem.dispatchEvent(new Event('dblclick'));
     });
-
-
-
     
     this.elem.addEventListener('click', event => {
       let left = Math.abs(event.clientX - this.elem.getBoundingClientRect().left);
@@ -127,6 +119,8 @@ export default class StepSlider {
   #onPointerUp = () => {
     document.removeEventListener('pointermove', this.#onPointerMove);
     document.removeEventListener('pointerup', this.#onPointerUp);
+
+    this.elem.classList.remove('slider_dragging');
 
     const sliderChangeEvent = new CustomEvent('slider-change', { // имя события должно быть именно 'slider-change'
       detail: this.#value, // значение 0, 1, 2, 3, 4
