@@ -60,7 +60,16 @@ export default class StepSlider {
 
       const thumb = event.target.closest('.slider__thumb');
       if (thumb) {
-        thumb.dispatchEvent(new Event('pointerdown'));
+        const pointerDownEvent = new PointerEvent('pointerdown', {
+          bubbles: true,
+          cancelable: true,
+          clientX: event.clientX,
+          clientY: event.clientY,
+          pointerId: 1,
+          pointerType: 'mouse',
+          button: 0 // 0 = левая кнопка мыши
+        });
+        thumb.dispatchEvent(pointerDownEvent);
       }
     }, {once: true});
 
@@ -98,7 +107,7 @@ export default class StepSlider {
 
   #onPointerMove = event => {
     event.preventDefault();
-    const newLeft = event.clientX - this.elem.getBoundingClientRect().left;;
+    const newLeft = event.clientX - this.elem.getBoundingClientRect().left;
     let leftRelative = newLeft / this.elem.offsetWidth;
 
     // курсор вышел из слайдера => оставить бегунок в его границах.
@@ -120,6 +129,7 @@ export default class StepSlider {
     let value = Math.round(approximateValue);
 
     this.#value = value;
+    this.elem.querySelector('.slider__value').innerHTML = this.#value;
   }
 
   #onPointerUp = () => {
