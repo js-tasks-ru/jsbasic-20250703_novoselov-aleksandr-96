@@ -62,12 +62,7 @@ export default class Modal {
   }
 
   close() {
-    const modal = document.body.querySelector('.modal');
-
-    if (modal) {
-      modal.remove();
-    }
-
+    this.elem.remove();
     document.body.classList.remove('is-modal-open');
   }
 }
