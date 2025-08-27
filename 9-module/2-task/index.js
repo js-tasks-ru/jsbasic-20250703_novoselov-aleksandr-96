@@ -58,5 +58,11 @@ export default class Main {
       const product = this.products.find(product => product.id === event.detail);
       this.cart.addProduct(product);
     });
+
+    this.stepSlider.elem.addEventListener('slider-change', event => {
+      this.productsGrid.updateFilter({
+        maxSpiciness: event.detail
+      });
+    });
   }
 }
