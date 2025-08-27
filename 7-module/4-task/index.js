@@ -24,7 +24,7 @@ export default class StepSlider {
       <div class="slider">
         <!--Ползунок слайдера с активным значением-->
         <div class="slider__thumb">
-          <span class="slider__value">0</span>
+          <span class="slider__value">${this.value}</span>
         </div>
 
         <!--Полоска слайдера-->
@@ -48,6 +48,7 @@ export default class StepSlider {
 
     this.#thumb = this.elem.querySelector('.slider__thumb');
     this.#progress = this.elem.querySelector('.slider__progress');
+    this.#thumbProgressHandler();
 
     this.#thumb.ondragstart = () => false;
 

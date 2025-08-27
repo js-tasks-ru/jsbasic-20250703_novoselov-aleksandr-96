@@ -3,6 +3,7 @@ import createElement from '../../assets/lib/create-element.js';
 export default class RibbonMenu {
   #categories = []
   elem = null
+  value = ''
 
   constructor(categories) {
     this.#categories = categories ?? this.#categories;
@@ -52,9 +53,11 @@ export default class RibbonMenu {
       event.preventDefault();
       document.querySelector('.ribbon__item_active').classList.remove('ribbon__item_active');
       item.classList.add('ribbon__item_active');
+      const id = item.dataset.id;
+      this.value = id;
 
       const customEvent = new CustomEvent('ribbon-select', {
-        detail: item.dataset.id,
+        detail: id,
         bubbles: true,
       });
 
