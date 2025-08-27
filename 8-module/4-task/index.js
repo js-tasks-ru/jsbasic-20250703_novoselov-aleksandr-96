@@ -188,8 +188,34 @@ export default class Cart {
     }
   }
 
-  onSubmit(event) {
-    // ...ваш код
+  async onSubmit(event) {
+    event.preventDefault();
+    document.querySelector('.cart-buttons__button').classList.add('is-loading');
+
+    let form = document.querySelector('.cart-form');
+
+    let response = await fetch('https://httpbin.org/post', {
+      method: 'POST',
+      body: new FormData(form)
+    });
+
+    if (response.ok) {
+      this.modal.setTitle('Success!');
+      this.cartItems = [];
+      this.modal.setBody(
+        createElement(
+          `
+          <div class="modal__body-inner">
+            <p>
+              Order successful! Your order is being cooked :) <br>
+              We’ll notify you about delivery time shortly.<br>
+              <img src="/assets/images/delivery.gif">
+            </p>
+          </div>
+        `
+        )
+      );
+    }
   }
 
   addEventListeners() {
