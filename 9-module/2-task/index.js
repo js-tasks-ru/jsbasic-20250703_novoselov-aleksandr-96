@@ -17,6 +17,7 @@ export default class Main {
   cartIcon = null
   cart = null
   productsGrid = null
+  products = []
 
   constructor() {
   }
@@ -40,8 +41,8 @@ export default class Main {
     this.cart = new Cart(this.cartIcon);
 
     let response = await fetch('products.json');
-    let products = await response.json();
-    this.productsGrid = new ProductsGrid(products);
+    this.products = await response.json();
+    this.productsGrid = new ProductsGrid(this.products);
     let productsGridHolder = document.querySelector('[data-products-grid-holder]');
     productsGridHolder.innerHTML = '';
     productsGridHolder.append(this.productsGrid.elem);
@@ -51,6 +52,11 @@ export default class Main {
       vegeterianOnly: document.getElementById('vegeterian-checkbox').checked,
       maxSpiciness: this.stepSlider.value,
       category: this.ribbonMenu.value
+    });
+
+    document.body.addEventListener('product-add', event => {
+      const product = this.products.find(product => product.id === event.detail);
+      this.cart.addProduct(product);
     });
   }
 }
