@@ -11,33 +11,46 @@ import CartIcon from '../../8-module/1-task/index.js';
 import Cart from '../../8-module/4-task/index.js';
 
 export default class Main {
+  carousel = null
+  ribbon = null
+  stepSlider = null
+  cartIcon = null
+  cart = null
+  productsGrid = null
 
   constructor() {
   }
 
   async render() {
-    let carousel = new Carousel(slides);
-    document.querySelector('[data-carousel-holder]').append(carousel.elem);
+    this.carousel = new Carousel(slides);
+    document.querySelector('[data-carousel-holder]').append(this.carousel.elem);
 
-    let ribbon = new RibbonMenu(categories);
-    document.querySelector('[data-ribbon-holder]').append(ribbon.elem);
+    this.ribbonMenu = new RibbonMenu(categories);
+    document.querySelector('[data-ribbon-holder]').append(this.ribbonMenu.elem);
 
-    let stepSlider = new StepSlider({
+    this.stepSlider = new StepSlider({
       steps: 5,
       value: 3,
     });
-    document.querySelector('[data-slider-holder]').append(stepSlider.elem);
+    document.querySelector('[data-slider-holder]').append(this.stepSlider.elem);
 
-    let cartIcon = new CartIcon();
-    document.querySelector('[data-cart-icon-holder]').append(cartIcon.elem);
+    this.cartIcon = new CartIcon();
+    document.querySelector('[data-cart-icon-holder]').append(this.cartIcon.elem);
 
-    let cart = new Cart(cartIcon);
+    this.cart = new Cart(this.cartIcon);
 
     let response = await fetch('products.json');
     let products = await response.json();
-    let productsGrid = new ProductsGrid(products);
+    this.productsGrid = new ProductsGrid(products);
     let productsGridHolder = document.querySelector('[data-products-grid-holder]');
     productsGridHolder.innerHTML = '';
-    productsGridHolder.append(productsGrid.elem);
+    productsGridHolder.append(this.productsGrid.elem);
+
+    this.productsGrid.updateFilter({
+      noNuts: document.getElementById('nuts-checkbox').checked,
+      vegeterianOnly: document.getElementById('vegeterian-checkbox').checked,
+      maxSpiciness: this.stepSlider.value,
+      category: this.ribbonMenu.value
+    });
   }
 }
