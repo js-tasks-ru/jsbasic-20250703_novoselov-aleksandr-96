@@ -12,7 +12,7 @@ import Cart from '../../8-module/4-task/index.js';
 
 export default class Main {
   carousel = null
-  ribbon = null
+  ribbonMenu = null
   stepSlider = null
   cartIcon = null
   cart = null
@@ -64,5 +64,11 @@ export default class Main {
         maxSpiciness: event.detail
       });
     });
+
+    this.ribbonMenu.elem.addEventListener('ribbon-select', event => {
+      this.productsGrid.updateFilter({
+        category: event.detail
+      });
+    })
   }
 }
