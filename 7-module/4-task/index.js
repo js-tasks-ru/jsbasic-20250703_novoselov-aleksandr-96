@@ -3,7 +3,7 @@ import createElement from '../../assets/lib/create-element.js';
 export default class StepSlider {
   #steps = 0
   #segments
-  #value = 0
+  value = 0
   elem = null
   #oldActiveIndex = 0
   #allSliderSpan = null
@@ -12,7 +12,7 @@ export default class StepSlider {
 
   constructor({ steps, value = 0 }) {
     this.#steps = steps;
-    this.#value = value;
+    this.value = value;
     this.#oldActiveIndex = value;
     this.#segments = this.#steps - 1;
 
@@ -44,7 +44,7 @@ export default class StepSlider {
     this.elem = createElement(this.#html());
 
     this.allSliderSpan = Array.from(this.elem.querySelectorAll('span')).filter(elem => !elem.classList.contains('slider__value'));
-    this.allSliderSpan[this.#value].classList.toggle('slider__step-active');
+    this.allSliderSpan[this.value].classList.toggle('slider__step-active');
 
     this.#thumb = this.elem.querySelector('.slider__thumb');
     this.#progress = this.elem.querySelector('.slider__progress');
@@ -65,7 +65,7 @@ export default class StepSlider {
       let leftRelative = left / this.elem.offsetWidth;
       let approximateValue = leftRelative * this.#segments;
       
-      this.#valueChangeHandler(approximateValue);
+      this.valueChangeHandler(approximateValue);
       
       this.#stepActiveHandler();
 
@@ -76,7 +76,7 @@ export default class StepSlider {
   }
 
   #thumbProgressHandler = () => {
-    let valuePercents = this.#value / this.#segments * 100;
+    let valuePercents = this.value / this.#segments * 100;
 
     this.#thumb.style.left = `${valuePercents}%`;
     this.#progress.style.width = `${valuePercents}%`;
@@ -84,23 +84,23 @@ export default class StepSlider {
 
   #stepActiveHandler = () => {
     this.allSliderSpan[this.#oldActiveIndex].classList.toggle('slider__step-active');
-    this.allSliderSpan[this.#value].classList.toggle('slider__step-active');
-    this.#oldActiveIndex = this.#value;
+    this.allSliderSpan[this.value].classList.toggle('slider__step-active');
+    this.#oldActiveIndex = this.value;
   }
 
   #dispatchSliderChangeEvent = () => {
     const sliderChangeEvent = new CustomEvent('slider-change', { // имя события должно быть именно 'slider-change'
-      detail: this.#value, // значение 0, 1, 2, 3, 4
+      detail: this.value, // значение 0, 1, 2, 3, 4
       bubbles: true // событие всплывает - это понадобится в дальнейшем
     });
 
     this.elem.dispatchEvent(sliderChangeEvent);
   }
 
-  #valueChangeHandler = approximateValue => {
+  valueChangeHandler = approximateValue => {
     let value = Math.round(approximateValue);
-    this.#value = value;
-    this.elem.querySelector('.slider__value').innerHTML = this.#value;
+    this.value = value;
+    this.elem.querySelector('.slider__value').innerHTML = this.value;
   }
 
   #onPointerMove = event => {
@@ -123,7 +123,7 @@ export default class StepSlider {
     this.#progress.style.width = `${leftPercents}%`;
 
     let approximateValue = leftRelative * this.#segments;
-    this.#valueChangeHandler(approximateValue);
+    this.valueChangeHandler(approximateValue);
   }
 
   #onPointerUp = () => {
