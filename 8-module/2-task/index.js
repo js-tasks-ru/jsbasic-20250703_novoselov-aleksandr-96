@@ -5,7 +5,6 @@ export default class ProductGrid {
   elem = null
   filteredProducts = []
   #inner = null
-  
 
   constructor(products) {
     this.products = products;
@@ -13,7 +12,6 @@ export default class ProductGrid {
     this.filters = {};
 
     this.#render();
-    
   }
 
   updateFilter = filters => {
