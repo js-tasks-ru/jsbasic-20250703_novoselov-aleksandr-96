@@ -5,6 +5,7 @@ import Modal from '../../7-module/2-task/index.js';
 
 export default class Cart {
   cartItems = []; // [product: {...}, count: N]
+  modal = []
 
   constructor(cartIcon) {
     this.cartIcon = cartIcon;
@@ -42,6 +43,7 @@ export default class Cart {
 
     if (item.count === 1 && amount === -1) {
       this.cartItems.splice(index, 1);
+      item.count = 0;
     } else {
       item.count += amount;
     }
@@ -113,10 +115,10 @@ export default class Cart {
   }
 
   renderModal() {
-    let modal = new Modal();
-    modal.setTitle('Your order');
-    modal.setBody(this.renderModalBody());
-    modal.open();
+    this.modal = new Modal();
+    this.modal.setTitle('Your order');
+    this.modal.setBody(this.renderModalBody());
+    this.modal.open();
   }
 
   renderModalBody = () => {
@@ -176,6 +178,14 @@ export default class Cart {
     productPrice.innerHTML = `€${(cartItem.count * cartItem.product.price).toFixed(2)}`;
 
     infoPrice.innerHTML = `€${this.getTotalPrice().toFixed(2)}`;
+
+    if (cartItem.count === 0) {
+      modalBody.querySelector(`[data-product-id="${productId}"]`).remove();
+    }
+
+    if (this.cartItems.length === 0) {
+      this.modal.close();
+    }
   }
 
   onSubmit(event) {
