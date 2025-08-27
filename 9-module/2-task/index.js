@@ -16,6 +16,28 @@ export default class Main {
   }
 
   async render() {
-    // ... ваш код
+    let carousel = new Carousel(slides);
+    document.querySelector('[data-carousel-holder]').append(carousel.elem);
+
+    let ribbon = new RibbonMenu(categories);
+    document.querySelector('[data-ribbon-holder]').append(ribbon.elem);
+
+    let stepSlider = new StepSlider({
+      steps: 5,
+      value: 3,
+    });
+    document.querySelector('[data-slider-holder]').append(stepSlider.elem);
+
+    let cartIcon = new CartIcon();
+    document.querySelector('[data-cart-icon-holder]').append(cartIcon.elem);
+
+    let cart = new Cart(cartIcon);
+
+    let response = await fetch('products.json');
+    let products = await response.json();
+    let productsGrid = new ProductsGrid(products);
+    let productsGridHolder = document.querySelector('[data-products-grid-holder]');
+    productsGridHolder.innerHTML = '';
+    productsGridHolder.append(productsGrid.elem);
   }
 }
