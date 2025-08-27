@@ -69,6 +69,18 @@ export default class Main {
       this.productsGrid.updateFilter({
         category: event.detail
       });
-    })
+    });
+
+    document.querySelector('#nuts-checkbox').addEventListener('change', event => {
+      this.productsGrid.updateFilter({
+        noNuts: event.target.checked // новое значение чекбокса
+      });
+    });
+
+    document.querySelector('#vegeterian-checkbox').addEventListener('change', event => {
+      this.productsGrid.updateFilter({
+        vegeterianOnly: event.target.checked // новое значение чекбокса
+      });
+    });
   }
 }
