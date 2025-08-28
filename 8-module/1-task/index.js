@@ -48,20 +48,21 @@ export default class CartIcon {
 
     if (isMobile || window.pageYOffset <= this.#initialTopCoord) {
       this.clearCartPosition();
-    } else {
-      let leftIndent = Math.min(
-        document.querySelector('.container').getBoundingClientRect().right + 20,
-        document.documentElement.clientWidth - this.elem.offsetWidth - 10
-      ) + 'px';
-
-      Object.assign(this.elem.style, {
-        position: 'fixed',
-        top: this.#initialTopCoord + 'px',
-        zIndex: 1e3,
-        right: '10px',
-        left: leftIndent
-      });
+      return;
     }
+
+    let leftIndent = Math.min(
+      document.querySelector('.container').getBoundingClientRect().right + 20,
+      document.documentElement.clientWidth - this.elem.offsetWidth - 10
+    ) + 'px';
+
+    Object.assign(this.elem.style, {
+      position: 'fixed',
+      top: this.#initialTopCoord + 'px',
+      zIndex: 1e3,
+      right: '10px',
+      left: leftIndent
+    });
   }
 
   clearCartPosition = () => {
