@@ -30,7 +30,7 @@ export default class ProductCard {
     this.elem = createElement(this.#html());
 
     this.elem.addEventListener('click', event => {
-      if (event.target.classList.contains('card__button')) {
+      if (event.target.closest('.card__button')) {
         const event = new CustomEvent("product-add", { // имя события должно быть именно "product-add"
           detail: this.#product.id, // Уникальный идентификатора товара из объекта товара
           bubbles: true // это событие всплывает - это понадобится в дальнейшем
